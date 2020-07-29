@@ -1,64 +1,150 @@
 <template>
   <div>
-    <v-card>
-      <v-card-title>{{ title }}</v-card-title>
-      <v-card-subtitle>{{ subtitle }}</v-card-subtitle>
-      <v-card-text>
-        <v-row>
-          <v-col cols="12" lg="4">
-            <img :src="preview_src" width="100%" style="max-width: 380px; max-height: 480px" id="preview_img">
-          </v-col>
+    <transition name="fade" mode="out-in" cols="12">
+      <v-row key="2">
+        <v-col cols="12">
+          <v-stepper v-model="e6" vertical>
+            <v-stepper-step editable step="1">
+              Upload a photo of you sitting
+              <small>Please relax and sit as how you usually do</small>
+            </v-stepper-step>
 
-          <v-col cols="12" lg="6">
-            <v-file-input prepend-icon="camera" type="file" accept="image/*" label="Input image" v-on:change="updatePreview"></v-file-input>
-          </v-col>
-        </v-row>
-      </v-card-text>
-    </v-card>
+            <v-stepper-content step="1">
+              <v-row>
+                <v-col cols="12">
+                  <img :src="preview_src" class="display-img" crossorigin='anonymous'>
+                </v-col>
+                <v-col cols="12" lg="5">
+                  <v-file-input prepend-icon="attach_file" type="file" accept="image/*" label="Input image"
+                                v-on:change="updatePreview" outlined camera></v-file-input>
+                </v-col>
+              </v-row>
+            </v-stepper-content>
+
+            <v-stepper-step editable step="2">
+              Results
+              <small>How is your posture</small>
+            </v-stepper-step>
+
+            <v-stepper-content step="2">
+              <v-row>
+                <v-col cols="12">
+                  <transition name="slide-fade">
+                    <div class="text-center" v-if="resultant_img === 'loading'">
+                      <p style="font-size: 140%">Our robots are analyzing your posture</p>
+                      <v-progress-circular indeterminate color="primary"></v-progress-circular>
+                    </div>
+
+                    <v-img max-height="400" contain v-else :src="resultant_img" ></v-img>
+                  </transition>
+                </v-col>
+
+                <v-col cols="12">
+                  <v-simple-table v-if="posture_result.length !== 0 ">
+                    <thead>
+                    <tr>
+                      <th class="text-left">Part</th>
+                      <th class="text-left">Confidence</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="(p, i) in posture_result" :key="i">
+                      <td>{{ p[0] }}</td>
+                      <td>{{ p[1].toFixed(4) }}</td>
+                    </tr>
+                    </tbody>
+                  </v-simple-table>
+
+                  <h3 v-if="posture_result.length === 0 && resultant_img !== 'loading'" >No human/posture found by the algorithm</h3>
+                </v-col>
+
+                <v-col cols="12">
+                  <v-btn class="teal darken-4 white--text" @click="resetSite">New posture</v-btn>
+                </v-col>
+              </v-row>
+            </v-stepper-content>
+
+          </v-stepper>
+
+        </v-col>
+
+      </v-row>
+    </transition>
+
+    <v-snackbar v-model="snackbar" timeout="5000">
+      {{ snack_msg }}
+    </v-snackbar>
+
   </div>
 </template>
 
 <script>
+  const API_ENDPOINT = (process.env.NODE_ENV === 'development') ? "http://localhost:8080/" : "https://backend-api-ou7vebbxoq-nn.a.run.app/";
   import axios from 'axios'
-
-  const SERVER_URL = "http://127.0.0.1:5000/simulate";
 
   export default {
     name: 'home',
     data(){
       return {
-        title : "Upload a photo of you sitting",
-        subtitle : "Please relax and sit as how you usually do",
+        snackbar: false,
+        snack_msg: "",
+        e6: 1,
         preview_src : "img/img_sitting.webp",
-        posture_msg : {
-          "good_posture" : ["You have good posture!!", "Upload another photo"],
-          "bad_posture" : ["Oops, your posture seems bad", "Please consult a chiropractor, or upload another photo "],
-          "loading_posture" : ["Analyzing posture", "Sit tight!!"]
-        },
+        resultant_img: "",
+        posture_result : [],
       }
     },
     methods : {
       updatePreview(e) {
-        this.preview_src = URL.createObjectURL(e);
-        this.predict(e);
-      },
-      predict(posture_image) {
-        this.updateHeader("loading_posture");
-        let data = new FormData();
-        data.append('file', posture_image, posture_image.filename);
-        axios.post(SERVER_URL, data)
-          .then(response => {
-            let a = (response.data.posture === "bad") ? "bad_posture" : "good_posture";
-            this.updateHeader(a);
+        if (e !== undefined){
+          let form = new FormData();
+          form.append("file", e);
+
+          this.resultant_img = "loading";
+          this.posture_result = [];
+          this.e6 = 2;
+
+          axios.post(API_ENDPOINT + "/api/predict", form, {
+            headers: {
+              'Content-Type': e.type
+            }
+          }).then((r) => {
+            this.resultant_img = 'data:image/png;base64,' + r.data[0].image;
+            this.posture_result = JSON.parse(r.data[0].prediction);
+          }).catch((e) => {
+            this.resetSite();
+            this.snack_msg = e;
+            this.snackbar = true;
           });
+        }
       },
-      updateHeader(val){
-        this.title = this.posture_msg[val][0];
-        this.subtitle = this.posture_msg[val][1];
-      }
-    },
-    mounted() {
+
+      resetSite(){
+        this.resultant_img = "";
+        this.posture_result = [];
+        this.e6 = 1;
+      },
 
     }
   }
 </script>
+
+<style scoped>
+  .slide-fade-enter-active {
+    transform: translateY(200px);
+    opacity: 0;
+    transition: 1s ease;
+  }
+  .slide-fade-leave-active {
+    transition-delay: 1s;
+    transform: translateY(-200px);
+    opacity: 0;
+    transition: 1s ease-in-out;
+  }
+
+  .display-img {
+    width: 100%;
+    max-width: 380px;
+    max-height: 380px;
+  }
+</style>
