@@ -1,4 +1,5 @@
-# apu-schedule
+# Sitting Posture Detection client
+Web application for users to upload their images. Built using VueJS with Vuetify for UI.
 
 ## Project setup
 ```
