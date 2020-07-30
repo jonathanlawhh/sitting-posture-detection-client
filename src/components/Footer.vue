@@ -2,9 +2,7 @@
     <v-footer height="auto" style="bottom: 0;" absolute>
         <v-container>
             <v-row>
-                <v-col cols="6">
-                    Jonathan Law
-                </v-col>
+                <p class="ma-auto">{{ new Date().getFullYear() }} | Jonathan Law</p>
 
                 <v-spacer></v-spacer>
 

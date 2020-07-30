@@ -31,7 +31,7 @@
           <transition name="slide-fade">
             <v-col cols="12" lg="7" v-if="processing === 0">
               <v-file-input prepend-icon="attach_file" type="file" accept="image/*" label="Input image"
-                            v-on:change="updatePreview" outlined camera></v-file-input>
+                            v-on:change="predict" outlined camera></v-file-input>
 
               <v-spacer></v-spacer>
 
@@ -90,15 +90,13 @@
       }
     },
     methods : {
-      updatePreview(e) {
+      predict(e) {
         if (e !== undefined){
           this.processing = 1;
           this.preview_src = URL.createObjectURL(e);
 
           let form = new FormData();
           form.append("file", e);
-
-          this.posture_result = [];
 
           axios.post(API_ENDPOINT + "/api/predict", form, {
             headers: {
@@ -136,7 +134,7 @@
         this.camera_dialog = false;
         if (im !== null){
           this.preview_src = im;
-          this.updatePreview(this.dataURLtoFile(im, 'tmp.png'));
+          this.predict(this.dataURLtoFile(im, 'tmp.png'));
         }
       },
 
