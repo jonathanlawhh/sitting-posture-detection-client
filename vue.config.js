@@ -3,7 +3,7 @@ module.exports = {
     "vuetify"
   ],
   devServer: {
-    compress: true,
-    disableHostCheck: true,   // That solved it
-  }
+    compress: true
+  },
+  productionSourceMap: false
 }

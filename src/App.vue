@@ -3,7 +3,7 @@
     <v-container>
       <v-app-bar max-height="64" flat color="white">
         <div class="text-center hidden-lg-and-up">
-          <v-btn color="blue" dark @click="sheet = !sheet" icon><v-icon>menu</v-icon></v-btn>
+          <v-btn color="orange" @click="sheet = !sheet" icon><v-icon>menu</v-icon></v-btn>
           <v-bottom-sheet v-model="sheet">
             <v-sheet height="200px">
               <v-container>
@@ -23,11 +23,11 @@
         <h2>Sitting Posture Identifier</h2>
         <v-spacer></v-spacer>
         <div class="hidden-md-and-down" v-for="nav in navigations" v-bind:key="nav.url">
-          <v-btn style="margin-left: 24px;" outlined :to="nav.url">{{ nav.name }}</v-btn>
+          <v-btn class="ml-6" outlined :to="nav.url">{{ nav.name }}</v-btn>
         </div>
       </v-app-bar>
 
-      <router-view style="margin-bottom: 64px;"></router-view>
+      <router-view class="mb-16"></router-view>
 
       <Footer></Footer>
 
@@ -55,7 +55,7 @@
 </script>
 
 <style>
-  .v-toolbar__content{
+  .v-toolbar__content {
     padding-left: 0 !important;
   }
 

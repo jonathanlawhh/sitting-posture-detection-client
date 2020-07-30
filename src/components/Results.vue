@@ -18,7 +18,7 @@
         <p class="display-1" v-else>No posture/human detected in this image</p>
         <v-btn text small class="orange--text" to="/info#results-interpret">What do these results mean?</v-btn><br>
 
-        <v-btn style="margin-top: 24px;" v-on:click="$emit('new_posture')" x-large outlined>New Posture</v-btn>
+        <v-btn class="mt-6" v-on:click="$emit('new_posture')" x-large outlined>New Posture</v-btn>
     </div>
 </template>
 
@@ -28,7 +28,3 @@
         props: ['posture_result'],
     }
 </script>
-
-<style scoped>
-
-</style>
