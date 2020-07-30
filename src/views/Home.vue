@@ -32,6 +32,16 @@
             <v-col cols="12" lg="7" v-if="processing === 0">
               <v-file-input prepend-icon="attach_file" type="file" accept="image/*" label="Input image"
                             v-on:change="updatePreview" outlined camera></v-file-input>
+
+              <v-spacer></v-spacer>
+
+              <v-btn style="width: 100%;" outlined x-large @click="camera_dialog = !camera_dialog">
+                <v-icon left>camera</v-icon> Camera
+              </v-btn>
+              <v-dialog v-model="camera_dialog" max-width="720">
+                <Camera v-if="camera_dialog" v-on:capturedImage="capturedImage"></Camera>
+              </v-dialog>
+
             </v-col>
 
             <v-col cols="12" lg="7" v-if="processing === 2" id="posture_results">
@@ -54,16 +64,19 @@
 <script>
   const API_ENDPOINT = (process.env.NODE_ENV === 'development') ? "http://localhost:8080/" : "https://backend-api-ou7vebbxoq-nn.a.run.app/";
   import axios from 'axios'
+
   const Results = () => import('../components/Results');
   const TLDR = () => import('../components/TLDR');
+  const Camera = () => import('../components/Camera');
 
   export default {
     name: 'home',
     components: {
-      TLDR, Results
+      TLDR, Results, Camera
     },
     data(){
       return {
+        camera_dialog: false,
         snackbar: false,
         snack_msg: "",
         header_messages: [
@@ -107,6 +120,23 @@
             this.snack_msg = e;
             this.snackbar = true;
           });
+        }
+      },
+
+      dataURLtoFile(dataurl, filename) {
+        let arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+                bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+        while(n--){
+          u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new File([u8arr], filename, {type:mime});
+      },
+
+      capturedImage(im){
+        this.camera_dialog = false;
+        if (im !== null){
+          this.preview_src = im;
+          this.updatePreview(this.dataURLtoFile(im, 'tmp.png'));
         }
       },
 
