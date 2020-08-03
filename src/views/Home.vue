@@ -84,7 +84,7 @@
           ["Processing...", "Our robots are on it"],
           ["Done!!", "Here is what our robots has to say:"]
         ],
-        preview_src : "/img/img_sitting.webp",
+        preview_src : "/img/img_sitting.svg",
         posture_result : [],
         processing : 0
       }
@@ -141,7 +141,7 @@
       resetSite(){
         this.posture_result = [];
         this.processing = 0;
-        this.preview_src = "/img/img_sitting.webp";
+        this.preview_src = "/img/img_sitting.svg";
       },
     }
   }

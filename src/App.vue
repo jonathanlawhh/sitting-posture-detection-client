@@ -3,7 +3,9 @@
     <v-container>
       <Header></Header>
 
-      <router-view class="mb-16"></router-view>
+      <keep-alive>
+        <router-view class="mb-16"></router-view>
+      </keep-alive>
 
       <Footer></Footer>
 
