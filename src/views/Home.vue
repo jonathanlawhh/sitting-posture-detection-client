@@ -62,8 +62,8 @@
 </template>
 
 <script>
-  const API_ENDPOINT = (process.env.NODE_ENV === 'development') ? "http://localhost:8080/" : "https://backend-api-ou7vebbxoq-nn.a.run.app/";
   import axios from 'axios'
+  import { dataURLtoFile } from '../functions/common_functions'
 
   const Results = () => import('../components/Results');
   const TLDR = () => import('../components/TLDR');
@@ -98,7 +98,7 @@
           let form = new FormData();
           form.append("file", e);
 
-          axios.post(API_ENDPOINT + "/api/predict", form, {
+          axios.post(process.env.VUE_APP_API_SERVER + "/api/predict", form, {
             headers: {
               'Content-Type': e.type
             }
@@ -121,20 +121,11 @@
         }
       },
 
-      dataURLtoFile(dataurl, filename) {
-        let arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-                bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-        while(n--){
-          u8arr[n] = bstr.charCodeAt(n);
-        }
-        return new File([u8arr], filename, {type:mime});
-      },
-
       capturedImage(im){
         this.camera_dialog = false;
         if (im !== null){
           this.preview_src = im;
-          this.predict(this.dataURLtoFile(im, 'tmp.png'));
+          this.predict(dataURLtoFile(im, 'tmp.png'));
         }
       },
 

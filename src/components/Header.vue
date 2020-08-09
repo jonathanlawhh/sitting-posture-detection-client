@@ -43,6 +43,7 @@
                 sheet: false,
                 navigations: [
                     { url: "/", name: "Home" },
+                    { url: "/timeline", name: "Timeline" },
                     { url: "/info", name: "Info" },
                 ],
                 theme_icon: ["brightness_2", "brightness_7"]

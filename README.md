@@ -2,6 +2,10 @@
 Web application for users to upload their images. Built using VueJS with Vuetify for UI.
 
 ## Project setup
+
+1. Rename .env.example to .env
+2. Install npm dependencies
+
 ```
 npm install
 ```

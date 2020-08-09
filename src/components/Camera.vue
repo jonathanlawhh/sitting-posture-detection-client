@@ -4,14 +4,13 @@
             <v-row>
                 <v-col cols="12" style="position: relative" v-if="devices.length !== 0">
                     <video width="100%" id="videocam" autoplay ></video>
-<!--                            <img class="overlay" style="width: 90%" src="/img/image_framing.svg">-->
                 </v-col>
 
                 <v-col cols="12" class="mt-3" v-else>
                     <h3 class="text-center">No camera detected!!</h3>
                 </v-col>
 
-                <v-col cols="12">
+                <v-col cols="12" v-if="!timeline_mode">
                     <v-row class="text-center" align="center">
                         <v-col cols="3">
                             <v-btn class="grey darken-4 side-buttons" outlined dark fab v-on:click="destroy">
@@ -38,6 +37,7 @@
 <script>
     export default {
         name: "Camera",
+        props: ["timeline_mode", "capture"],
         data(){
             return {
                 devices : [],
@@ -85,16 +85,29 @@
                 this.$emit('capturedImage', canvas.toDataURL('image/png'));
             },
 
+            async init(){
+                if('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices){
+                    await this.getDevices();
+                    (this.devices.length !== 0) && await this.startStream();
+                }
+            },
+
             destroy(){
                 this.stopStream();
                 this.$emit('capturedImage', null);
             }
         },
-        async mounted() {
-            if('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices){
-                await this.getDevices();
-                (this.devices.length !== 0) && this.startStream();
-            }
+        mounted() {
+            this.init();
+        },
+        watch: {
+            capture: async function (v) {
+                if (v === true){
+                    await this.init();
+                    await this.takePicture();
+                    this.$emit("timelineCaptured", null);
+                }
+            },
         }
     }
 </script>
