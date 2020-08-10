@@ -9,12 +9,13 @@
                             <v-col cols="12">
                                 <h2>Navigation</h2>
                             </v-col>
-                            <v-col cols="6" class="text-center" v-for="nav in navigations" v-bind:key="nav.url">
-                                <v-btn x-large outlined :to="nav.url" v-on:click="sheet = !sheet">{{ nav.name }}</v-btn>
+
+                            <v-col cols="12" class="text-center" v-for="nav in navigations" v-bind:key="nav.url">
+                                <v-btn width="100%" x-large outlined :to="nav.url" v-on:click="sheet = !sheet">{{ nav.name }}</v-btn>
                             </v-col>
 
                             <v-col cols="12" class="text-center">
-                                <v-btn style="width: 80%" x-large outlined v-on:click="toggleTheme">
+                                <v-btn width="100%" x-large outlined v-on:click="toggleTheme">
                                     <v-icon left>{{ theme_icon[(this.$vuetify.theme.dark) ? 1 : 0] }}</v-icon> SWITCH THEME
                                 </v-btn>
                             </v-col>
