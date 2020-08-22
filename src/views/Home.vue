@@ -71,6 +71,9 @@
 
   export default {
     name: 'home',
+    metaInfo: {
+      title: 'Home'
+    },
     components: {
       TLDR, Results, Camera
     },

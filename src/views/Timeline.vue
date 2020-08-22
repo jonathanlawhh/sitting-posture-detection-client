@@ -89,6 +89,9 @@
 
     export default {
         name: "Timeline",
+        metaInfo: {
+            title: 'Timeline'
+        },
         components: {
             Results, Camera, TimelineChart
         },

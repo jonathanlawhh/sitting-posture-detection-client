@@ -91,6 +91,9 @@
 <script>
     export default {
         name: "Info",
+        metaInfo: {
+            title: 'Info'
+        },
         data() {
             return {
                 results_interp: [

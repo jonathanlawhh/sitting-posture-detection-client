@@ -21,6 +21,10 @@
     components: {
       Header, Footer
     },
+    metaInfo: {
+      title: 'Sitting Posture Identifier',
+      titleTemplate: 'SPI | %s'
+    }
   }
 </script>
 
