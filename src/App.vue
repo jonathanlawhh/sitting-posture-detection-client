@@ -29,15 +29,6 @@
     padding-left: 0 !important;
   }
 
-  .slide-fade-enter-active, .slide-fade-leave-active {
-    transition: all .3s;
-  }
-
-  .slide-fade-enter, .slide-fade-leave-to {
-    transform: translateX(200px);
-    opacity: 0;
-  }
-
   .v-btn--active {
     background-color: rgba(0, 0, 0, 0.87) !important;
   }

@@ -5,7 +5,7 @@
                 <h2>Timeline mode</h2>
             </v-col>
             <v-col cols="12">
-                <p>Set an interval (min 1 minute), and timeline mode will analyze your posture over time.</p>
+                <p>Set an interval (min 10 seconds), and timeline mode will analyze your posture over time.</p>
             </v-col>
         </v-row>
 
@@ -20,7 +20,7 @@
                         <h4>Running...</h4>
                     </v-col>
                     <v-col cols="6" md="4">
-                        <v-text-field :disabled="timeline_start" label="minute" color="black" outlined type="number" v-model="minutes"></v-text-field>
+                        <v-text-field :disabled="timeline_start" label="seconds" color="black" outlined type="number" v-model="minutes"></v-text-field>
                     </v-col>
                     <v-col cols="6" md="8">
                         <v-btn outlined :color="(timeline_start) ? 'red' : 'dark'" x-large v-on:click="toggleTimeline">{{ (timeline_start) ? 'STOP' : 'START' }}</v-btn>
@@ -29,70 +29,68 @@
             </v-col>
         </v-row>
 
-        <v-row>
-            <v-col cols="12">
-                <h3>Timeline results</h3>
-            </v-col>
-            <v-col cols="12" lg="6">
-                <v-row>
-                    <v-col cols="12" v-for="(pv, i) in Object.keys(prediction_values)" v-bind:key="i">
-                        <v-card dark color="deep-orange" max-width="calc(100% - 32px)">
-                            <v-card-title>{{ pv }}</v-card-title>
-                            <v-card-text>
-                                <v-sparkline :labels="prediction_values[pv].map(p => p.time)" :value="prediction_values[pv].map(p => p.val)"
-                                             color="white" line-width="1" padding="12"></v-sparkline>
-                            </v-card-text>
-                        </v-card>
-                    </v-col>
-                </v-row>
-            </v-col>
+        <transition name="fade">
+            <v-row v-if="timeline_results.length > 0">
+                <v-col cols="12">
+                    <h3>Timeline results</h3>
+                </v-col>
+                <v-col cols="12" lg="6">
+                    <v-row>
+                        <v-col cols="12" v-for="(pv, i) in Object.keys(prediction_values)" v-bind:key="i">
+                            <TimelineChart v-bind:pv="pv" v-bind:prediction_values="prediction_values"></TimelineChart>
+                        </v-col>
+                    </v-row>
+                </v-col>
 
-            <v-col cols="12" lg="6">
-                <v-card>
-                    <v-tabs dark background-color="black darken-3" show-arrows v-model="tab">
-                        <v-tabs-slider color="black lighten-3"></v-tabs-slider>
-                        <v-tab v-for="ti in timeline_results" :key="ti.title">
-                            {{ ti.title }}
-                        </v-tab>
+                <v-col cols="12" lg="6">
+                    <v-card>
+                        <v-tabs dark background-color="black darken-3" show-arrows v-model="tab">
+                            <v-tabs-slider color="black lighten-3"></v-tabs-slider>
+                            <v-tab v-for="ti in timeline_results" :key="ti.title">
+                                {{ ti.title }}
+                            </v-tab>
 
-                        <v-tabs-items v-model="tab">
-                            <v-tab-item v-for="ti in timeline_results" :key="ti.title">
-                                <v-card flat>
-                                    <v-card-text>
-                                        <v-row>
-                                            <v-col cols="12" md="6" lg="4">
-                                                <v-img contain max-height="480" :src="ti.image"></v-img>
-                                            </v-col>
+                            <v-tabs-items v-model="tab">
+                                <v-tab-item v-for="ti in timeline_results" :key="ti.title">
+                                    <v-card flat>
+                                        <v-card-text>
+                                            <v-row>
+                                                <v-col cols="12" md="6" lg="4">
+                                                    <v-img contain max-height="480" :src="ti.image"></v-img>
+                                                </v-col>
 
-                                            <v-col cols="12" md="6" lg="6">
-                                                <Results v-bind:posture_result="ti.prediction" :timeline_mode="true"></Results>
-                                            </v-col>
-                                        </v-row>
-                                    </v-card-text>
-                                </v-card>
-                            </v-tab-item>
-                        </v-tabs-items>
-                    </v-tabs>
-                </v-card>
-            </v-col>
+                                                <v-col cols="12" md="6" lg="6">
+                                                    <Results v-bind:posture_result="ti.prediction" :timeline_mode="true"></Results>
+                                                </v-col>
+                                            </v-row>
+                                        </v-card-text>
+                                    </v-card>
+                                </v-tab-item>
+                            </v-tabs-items>
+                        </v-tabs>
+                    </v-card>
+                </v-col>
 
-        </v-row>
+            </v-row>
+        </transition>
+
     </div>
 
 </template>
 
 <script>
-    const MIN_GAP = 1;
+    const MIN_GAP = 10;
 
     import axios from "axios";
     import { dataURLtoFile } from '../functions/common_functions';
     const Camera = () => import('../components/Camera');
     const Results = () => import('../components/Results');
+    const TimelineChart = () => import('../components/TimelineChart');
 
     export default {
         name: "Timeline",
         components: {
-            Results, Camera
+            Results, Camera, TimelineChart
         },
         data() {
             return {
@@ -168,3 +166,13 @@
         }
     }
 </script>
+
+<style scoped>
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity 1s;
+    }
+
+    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+        opacity: 0;
+    }
+</style>

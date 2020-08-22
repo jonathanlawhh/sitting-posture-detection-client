@@ -29,7 +29,7 @@
             <v-col cols="12" lg="6">
                 <v-card outlined id="algorithm">
                     <v-card-title>Algorithm</v-card-title>
-                    <v-card-text>The algorithm used to estimate the posture uses <a href="https://pjreddie.com/darknet/yolo/" target="_blank">YOLOv3</a> as the underlying model.
+                    <v-card-text>The algorithm used to estimate the posture uses <a href="https://pjreddie.com/darknet/yolo/" target="_blank" rel="noreferrer">YOLOv3</a> as the underlying model.
                         Transfer learning was performed on top of YOLOv3 with a custom dataset and optimized for this use case (posture detection).</v-card-text>
                 </v-card>
             </v-col>
@@ -96,7 +96,7 @@
                 results_interp: [
                     { result: "neck_good/bad", interp: "neck_good indicates the subject neck is straight/looking forward, whereby neck_bad usually occurs in scenarios where the subject is looking down, or tilting the head" },
                     { result: "backbone_good/bad", interp: "backbone_good indicates the subject is sitting straight, whereby backbone_bad indicates the subject is slouching or leaning sideways" },
-                    { result: "buttocks_good/bad", interp: "buttocks_good indicates the subject is sitting straight, whereby backbone_bad indicates the subject is slouching or leaning sideways" },
+                    { result: "buttocks_good/bad", interp: "buttocks_good indicates the subject is sitting straight, whereby buttocks_bad indicates the subject buttocks are sliding forwards and not perpendicular with the backbone" },
                 ]
             }
         }

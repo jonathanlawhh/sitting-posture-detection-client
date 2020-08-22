@@ -6,7 +6,7 @@
 
                 <v-spacer></v-spacer>
 
-                <v-btn color="deep-orange" dark :icon="$vuetify.breakpoint.mobile" href="https://github.com/jonathanlawhh/posture-detection-backend" target="_blank"><v-icon>code</v-icon>
+                <v-btn color="deep-orange" dark :icon="$vuetify.breakpoint.mobile" href="https://github.com/jonathanlawhh/posture-detection-backend" target="_blank" rel="noreferrer"><v-icon>code</v-icon>
                     <span v-if="!$vuetify.breakpoint.mobile">Source Code</span>
                 </v-btn>
             </v-row>
