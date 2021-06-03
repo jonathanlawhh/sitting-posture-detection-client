@@ -8,8 +8,8 @@ module.exports = {
   productionSourceMap: false,
   pwa: {
     iconPaths: {
-      favicon32: null,
-      favicon16: null,
+      favicon32: '/favicon.webp',
+      favicon16: '/favicon.webp',
       appleTouchIcon: null,
       maskIcon:  null,
       msTileImage: null
