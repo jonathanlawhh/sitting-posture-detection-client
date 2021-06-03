@@ -22,8 +22,8 @@
       Header, Footer
     },
     metaInfo: {
-      title: 'Sitting Posture Identifier',
-      titleTemplate: 'SPI | %s'
+      title: '',
+      titleTemplate: '%s | Sitting Posture Identifier'
     }
   }
 </script>
